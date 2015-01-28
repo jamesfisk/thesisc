@@ -1,3 +1,9 @@
+"""
+Tests:
+-frequency of top 96 digrams
+"""
+
+
 from __future__ import division
 from corpus import *
 import os

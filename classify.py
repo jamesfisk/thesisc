@@ -1,6 +1,7 @@
 from centroid import *
 from datetime import datetime
 from operator import mul
+from singleletter import *
 from digrams import *
 from word import *
 import math
@@ -26,6 +27,8 @@ def classify (features, centroid, prior):
 	reduced = reduce(mul, scores) * prior
 	return reduced
 
+def run_all_tests ():
+
 
 
 
@@ -34,7 +37,7 @@ def classify (features, centroid, prior):
 
 if __name__ == "__main__":
 	"""
-	dummy = Centroid("abc", gaussian)
+	dummy = Centroid("abc", gaussian, 0)
 	dummy.make_dummy_centroid()
 	test = [6, 130, 8]
 	print classify(test, dummy, .5)
@@ -44,7 +47,7 @@ if __name__ == "__main__":
 	startTime = datetime.now()
 
 	correct = [0, 0, 0, 0]
-	for i in range(1000):
+	for i in range(10):
 		results = []
 		validation = get_random_validation_corpus()
 		test = get_test_corpus_minus_validation(validation)
@@ -73,6 +76,7 @@ if __name__ == "__main__":
 	print correct
 
 	print(datetime.now()-startTime)
+
 
 		
 

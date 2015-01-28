@@ -1,13 +1,22 @@
+"""
+Tests:
+-frequency of top 96 words
+
+"""
+
 from __future__ import division
 from corpus import *
+from parse import *
 import os
 import io
 import operator
 
 
-
+"""
+returns a dictionary with word/freq pairs for given text string
+"""
 def count_all_words(text, words):
-	text = text.split()
+	text = remove_punct(text).split()
 	for word in text:
 		word = word.lower()
 		if (word not in words):
@@ -56,10 +65,10 @@ def find_words(text, words):
 
 if __name__ == "__main__":
 	zones = get_zone_corpus()
-	words = {}
+	zonesd = []
 	for i in range(len(zones)):
-		words = count_all_words(zones[0].raw(), words)
-	sorted_d = sorted(words.items(), key=operator.itemgetter(1), reverse=True)
-	print sorted_d[:98]
-	print [x for (x, y) in sorted_d[:98]]
+		zonesd.append(set(top_96_words_keys(zones[i].raw())))
+	print zonesd[0] - zonesd[1]
+
+	
 

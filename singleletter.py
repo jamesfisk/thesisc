@@ -1,3 +1,8 @@
+"""
+Tests
+-single letter frequency
+"""
+
 from __future__ import division
 from corpus import *
 import nltk
