@@ -34,20 +34,22 @@ class Centroid:
 		for i in range(num_samples):
 			self.samples.append(self.func(self.corpus.raw(fileids=[files[i]]), self.aux))
 
+
 	def compute_mean(self):
-		self.mean = [x-x for x in range(len(self.samples[0]))]
+		self.mean = [0 for x in range(len(self.samples[0]))]
 		for k in range(len(self.samples[0])):
 			for j in range(len(self.samples)):
 				self.mean[k] += self.samples[j][k]
 		self.mean = [x / len(self.samples) for x in self.mean]
 
 	def compute_sv (self):
-		self.sv = [x - x for x in range(len(self.mean))]
-		for i in range(len(self.samples[0])):	#letters
+		self.sv = [0 for x in range(len(self.mean))]
+		for i in range(len(self.samples[0])):	#features
 			s = 0
 			for j in range(len(self.samples)):	#samples
 				s += (self.samples[j][i] - self.mean[i]) ** 2
 			self.sv[i] = s / (len(self.samples) - 1)
+		
 
 
 

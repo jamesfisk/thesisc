@@ -6,6 +6,7 @@ Tests:
 
 from __future__ import division
 from corpus import *
+from distances import *
 import os
 import io
 import operator
@@ -13,7 +14,7 @@ import operator
 
 def strip_whitespace(text):
 	text = text.split()
-	text = " ".join(text)
+	text = "_".join(text)
 	return text
 def count_all_digrams(text, digrams):
 	text = list(strip_whitespace(text))
@@ -66,11 +67,30 @@ def find_digrams(text, digrams):
 
 
 if __name__ == "__main__":
-	zones = get_zone_corpus()
-	digrams = {}
-	for i in range(len(zones)):
-		digrams = count_all_digrams(zones[0].raw(), digrams)
-	sorted_d = sorted(digrams.items(), key=operator.itemgetter(1), reverse=True)
-	print sorted_d[2:98]
-	print [x for (x, y) in sorted_d[2:98]]
+	p = get_clean_corpus()
+	s = get_nopunct_sonnet_corpus()
+	k = top_96_digrams_keys(p.raw())
+	d = []
+	for elt in k:
+		print elt
+
+	z = get_clean_zone_corpus()
+	for i in range(len(z)):
+		q = find_digrams(z[i].raw(), k)
+		d.append(q)
+		print "Zone", i + 1
+		for j in range(len(q)):
+			print  q[j]
+		print
+	print "Sonnets"
+	q = find_digrams(s.raw(), k)
+	for elt in q:
+		print elt
+
+	print_zone_distances(d)
+
+
+
+
+
 
