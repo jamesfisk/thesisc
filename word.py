@@ -8,11 +8,14 @@ from __future__ import division
 from corpus import *
 from parse import *
 from distances import *
+from res import *
 import os
 import io
 import json
+import pickle
 import operator
 import math
+import nltk
 
 
 """
@@ -96,6 +99,9 @@ def top_96_words_keys(text):
 	#print sorted_d
 	return [x for (x, y) in sorted_d]
 
+def top_96_corpus_words_keys():
+	return pickle.load(open("./res/corpus_words.p", "r"))
+
 def write_top_500_words_to_file(text, name):
 	fp = open("./wordfreq/" + name + ".json", 'wb')
 	w = count_all_words(text, {})
@@ -115,7 +121,9 @@ def find_words(text, words):
 		if word in words:
 			retlist[words.index(word)] += 1
 
-	return [x / (len(text) - 1) for x in retlist]
+	val = [x / (len(text) - 1) for x in retlist]
+
+	return val
 
 """
 return array of sets of distinctive words
@@ -123,23 +131,88 @@ return array of sets of distinctive words
 		
 def get_zone_distinctive_words():
 	w = []
-	z = get_pos_zones()
+	z = get_lemma_zones()
+	q = get_lemma_corpus()
+	"""
 	q = []
 
 	for i in range(len(z)):
 		 z[i] = lemmatize(z[i])
 		 q += z[i]
+	"""
 
 
 	for elt in z:
-		w.append(chi_square_test(q, elt))
+		txt = ""
+		for fid in elt.fileids():
+			txt += elt.raw(fid) + " "
+		w.append(chi_square_test(q.raw().split(), txt.split()))
+	pickle.dump(w, open("./dwords_by_zone.p", "w"))
 	return w
+def get_dwords_from_pickle():
+	return pickle.load(open("./dwords_by_zone.p", "r"))
+
+def period_dwords_by_sonnet():
+	w = get_dwords_from_pickle()
+	ww = [x[0] for x in w]
+
+	s = get_sonnet_lemmas()
+	ss = []
+
+	for i in range(1, 155):
+		txt = s.raw(str(i) + "lem.txt").split()
+
+		z = []
+		for per in ww:
+			ct = 0
+			for word in txt:
+				if word in per and word in dwords_hand:
+					ct += 1
+			z.append(ct)
+		ss.append(z)
+	return ss
+
+def dwords_in_text(txt):
+	z = []
+	w = [x[0] for x in get_dwords_from_pickle()]
+	words = txt.split()
+
+	for zone in w:
+		ct = 0
+		for elt in zone:
+			ct += words.count(elt)
+		z.append(float(ct))
 
 
-if __name__ == "__main__":
+	return z
+
+
+
+
+def pickle_zon_son_dwords():
+	z = get_zone_distinctive_words()
+	s = set(lemmatize(get_pos_sonnets()))
+	for i in range(len(z)):
+		dwords = sorted(list(set(z[i][0]) & s))
+		pickle.dump(dwords, open("./res/zdwords/" + str(i + 1) + ".p", "w"))
+
+
+def get_sonnet_dwords():
+	return pickle.load(open("son_dwords.p", "r"))
+
+def get_zone_son_dwords():
+	l = []
+	for i in range(1, 5):
+		l.append(pickle.load(open("./res/zdwords/" + str(i) + ".p", "r")))
+	return l
+
+
+def write_period_dwords_to_file():
 
 	s = get_pos_sonnets()
 	s = set(lemmatize(s))
+	exit()
+
 
 	z = get_clean_zone_corpus()
 
@@ -192,6 +265,40 @@ if __name__ == "__main__":
 	special_words = w[0] | w[1] | w[2] | w[3]
 	words = s & special_words
 		"""
+def do_sonnet_pos_again():
+	s = get_sonnet_list()
+	for i in range(len(s)):
+		p = nltk.pos_tag(s[i].split())
+		pickle.dump(p, open("./res/sonpos2/" + str(i + 1) + ".p", "w"))
+
+def dump_son_lemmas():
+	s = get_pos_sonnets_list()
+	for i in range(len(s)):
+		print "ping"
+		p = lemmatize(s[i])
+		pickle.dump(p, open("./res/sonlem/" + str(i + 1) + ".p", "w"))
+
+
+if __name__ == '__main__':
+	w = period_dwords_by_sonnet()
+	"""
+	s = get_sonnet_lemmas()
+	dw = get_zone_son_dwords()
+	f = open("./spreadsheets/dwordsSon.csv", "w")
+
+	for sonnet in s:
+		z = [0, 0, 0, 0]
+		for word in sonnet:
+			for zi in range(len(dw)):
+				if word in dw[zi]:
+					z[zi] += 1
+		f.write(",".join([str(x) for x in z]) + "\n")
+	"""
+
+
+
+
+
 
 	
 

@@ -18,6 +18,25 @@ def more_upper (word):
 		return True 
 	return False
 
+
+def replace_cr():
+	path = "/Users/jamesfisk/Desktop/thesisc/res/redactedB/"
+	files = os.listdir(path)
+
+
+	for k in range(len(files)):
+		if (files[k][-4:] != ".txt" and files[k][-4:] != ".TXT"):
+			continue
+
+		infile = open(path + files[k], 'r')
+		text = infile.read()
+		infile.close()
+
+		outfile = open(path + files[k], 'w')
+		outfile.write(text.replace("\r", "\n"))
+		outfile.close()
+
+
 if __name__ == '__main__':
 
 	path =  "/Users/jamesfisk/Desktop/thesisc/res/redacted/"

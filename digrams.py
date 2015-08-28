@@ -10,6 +10,7 @@ from distances import *
 import os
 import io
 import operator
+import pickle
 
 
 def strip_whitespace(text):
@@ -45,6 +46,9 @@ def top_96_digrams_keys(text):
 	sorted_d = sorted_d[:98]
 	#print sorted_d
 	return [x for (x, y) in sorted_d]
+
+def top_96_corpus_digrams_keys():
+	return pickle.load(open("./res/corpus_digrms.p", "r"))
 
 """
 returns frequency array of a passed list of digrams

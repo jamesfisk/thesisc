@@ -34,10 +34,10 @@ def get_letter_freq(text, nullAux):
 			sumAll += 1
 		except IndexError:
 			True
-			#print 'problem letter', letter
+			print 'problem letter', letter
 
-	ascii = [x / sumAll * 100 for x in ascii]
-	lil_punct = [x / sumAll * 100 for x in lil_punct]
+	ascii = [x / sumAll for x in ascii]
+	lil_punct = [x / sumAll  for x in lil_punct]
 	return ascii + lil_punct
 
 def get_semicolon_freq(text, nullAux):

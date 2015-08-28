@@ -2,6 +2,7 @@ from __future__ import division
 from corpus import *
 from syllable import *
 from distances import *
+from find_words import *
 
 """
 returns vector of frequency of words at length x where x is the vector index. up to 27.
@@ -14,6 +15,7 @@ def word_length(text, nullAux):
 
 	text = text.split()
 	for elt in text:
+		elt = alpha_only(elt)
 		totalwords += 1
 		idx = len(elt)
 		if idx == 0:
